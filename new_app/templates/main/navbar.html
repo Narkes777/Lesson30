@@ -1,0 +1,60 @@
+<!DOCTYPE html>
+{% load static %}
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>{% block title %}Title{% endblock %}</title>
+    <link rel="stylesheet" href="{% static 'css/style.css' %}">
+</head>
+<body>
+    <nav>
+        <ul>
+            <li>
+                <a href="{% url 'post_list' %}">Посты</a>
+            </li>
+            <li>
+                <a href="{% url 'author_list' %}">Авторы</a>
+            </li>
+            <li>
+                <a href="{% url 'main_page' %}">Главная страница</a>
+            </li>
+            <li>
+                <form method="get" action="{% url 'search_form' %}">
+                    {{ search_form.as_p }}
+                    <input type="submit" value="Найти">
+                </form>
+            </li>
+            {% if user.is_authenticated %}
+            <li>
+                <form method="post" action="{% url 'logout_view' %}">
+                    {% csrf_token %}
+                    <button type="submit" value="Выйти из сети">Выйти из сети</button>
+                </form>
+            </li>
+            <li>
+                <a href="{% url 'author_formset' %}">Author formset</a>
+            </li>
+            {% else %}
+            <li>
+                <p><a href="{% url 'login_view' %}">Войти в сеть</a></p>
+            </li>
+            <li>
+                <p><a href="{% url 'user_register' %}">Зарегестрироваться</a></p>
+            </li>
+            {% endif %}
+        </ul>
+    </nav>
+    <h1>Welcome, {{ user.username|default:"Пользователь" }}</h1>
+    <div>
+        <img src="{% static 'image.jpg' %}">
+    </div>
+    <div class="content">
+        {% block content %}
+        {% endblock %}
+    </div>
+    <footer>
+        {% block footer %}
+        {% endblock %}
+    </footer>
+</body>
+</html>
